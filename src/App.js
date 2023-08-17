@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Header from "./Components/Header";
 import AppBody from "./Components/AppBody"
+import Chat from "./Components/Chat";
 function App() {
   return (
     <div>
@@ -11,7 +12,7 @@ function App() {
         <AppBody/>
         <Routes>  
         {/* //old ver : switch mew is routes */}
-          <Route path="/" />
+          <Route path="/" exact />
         </Routes>
       </Router>
       

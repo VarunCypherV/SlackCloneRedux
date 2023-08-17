@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
+import Chat from "./Chat";
 
 const AppBody = () => {
   return (
     <AppBodyContainer>
       <Sidebar/>
+      <Chat/>
     </AppBodyContainer>
   );
 };
