@@ -8,6 +8,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
 import Loading from "./Loading";
 import Message from "./Message";
+
 const Chat = () => {
   const chatRef = useRef(null);
 
@@ -24,11 +25,24 @@ const Chat = () => {
         .collection("messages")
         .orderBy("timestamp", "asc")
   );
+
   useEffect(() => {
-    chatRef?.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    if (!loading) {
+      chatRef?.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
   }, [roomId, loading]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTo({
+        top: chatRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [roomMessages]);
+  
 
   if (!roomId) {
     return null; // or some loading indicator
@@ -36,46 +50,46 @@ const Chat = () => {
 
   return (
     <ChatContainer>
-      {roomDetails && roomMessages && (
-        <>
-          <Header>
-            <Headerleft>
-              <h4>
-                <strong>#{roomDetails?.data().name}</strong>
-              </h4>
-              <StarBorderOutlined />
-            </Headerleft>
-            <Headerright>
-              <p>
-                <InfoOutlined /> Details
-              </p>
-            </Headerright>
-          </Header>
+      <ChatContent>
+        {roomDetails && roomMessages && (
+          <>
+            <Header>
+              <Headerleft>
+                <h4>
+                  <strong>#{roomDetails?.data().name}</strong>
+                </h4>
+                <StarBorderOutlined />
+              </Headerleft>
+              <Headerright>
+                <p>
+                  <InfoOutlined /> Details
+                </p>
+              </Headerright>
+            </Header>
 
-          <ChatMessages>
-            {roomMessages?.docs.map((doc) => {
-              const { message, timestamp, user, userImage } = doc.data();
+            <ChatMessages ref={chatRef}>
+              {roomMessages?.docs.map((doc) => {
+                const { message, timestamp, user, userImage } = doc.data();
 
-              return (
-                <Message
-                  key={doc.id}
-                  message={message}
-                  timestamp={timestamp}
-                  user={user}
-                  userImage={userImage}
-                />
-              );
-            })}
-          </ChatMessages>
-          <ChatBottom ref={chatRef} />
-          {/* points to bottom after rendering */}
-          <ChatInput
-            channelId={roomId}
-            channelName={roomDetails?.data().name}
-            chatRef={chatRef}
-          />
-        </>
-      )}
+                return (
+                  <Message
+                    key={doc.id}
+                    message={message}
+                    timestamp={timestamp}
+                    user={user}
+                    userImage={userImage}
+                  />
+                );
+              })}
+            </ChatMessages>
+            <ChatInput
+              channelId={roomId}
+              channelName={roomDetails?.data().name}
+              chatRef={chatRef}
+            />
+          </>
+        )}
+      </ChatContent>
     </ChatContainer>
   );
 };
@@ -85,14 +99,17 @@ export default Chat;
 const ChatContainer = styled.div`
   color: black;
   margin-left: 15vw;
-
   margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const ChatContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Take available vertical space */
-  max-height: calc(100vh - 60px); /* Maximum height minus header */
-  /* ... other styles ... */
+  overflow-y: hidden; /* Hide overflow to prevent the chat input from getting pushed down */
 `;
 
 const Header = styled.div`
@@ -107,7 +124,7 @@ const Headerleft = styled.div`
   align-items: center;
   > h4 {
     display: flex;
-    text-transform: lowercase; //NEW
+    text-transform: lowercase;
     margin-right: 10px;
   }
   > h4 > .MuiSvgIcon-root {
@@ -115,6 +132,7 @@ const Headerleft = styled.div`
     font-size: 10px;
   }
 `;
+
 const Headerright = styled.div`
   display: flex;
   > p {
@@ -132,9 +150,8 @@ const ChatMessages = styled.div`
   flex: 1;
   padding-bottom: 15vh;
   width: 100%;
+  overflow-y: scroll;
   overflow-wrap: break-word;
 `;
 
-const ChatBottom = styled.div`
-  /* padding-bottom: 20vh; */
-`;
+// Remove the ChatBottom component since it's not needed in this version

@@ -57,6 +57,7 @@ const ChatInputContainer = styled.div`
     justify-content: space-between;
     margin-left: 15vw;
     
+    
     > form {
         flex-grow: 1;
         display: flex;
