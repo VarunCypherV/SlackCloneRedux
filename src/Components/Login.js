@@ -3,32 +3,29 @@ import { Button } from '@mui/material';
 import styled from 'styled-components';
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom'; // Import useHistory
+
+// import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 const Login = () => {
-    const navigate = useNavigate(); // Initialize the useHistory hook
-
-    const signIn = (e) => {
-        signInWithPopup(auth, provider)
-            .catch(alert);
+    const signIn = async () => {
+      try {
+        await signInWithPopup(auth,provider);
+      } catch (error) {
+        // Handle errors here, e.g., show an error message
+        console.error('Error signing in:', error);
+      }
     };
-
+  
     return (
-        <LoginContainer>
-            <LoginInnerContainer>
-                <img
-                src=""
-                alt="slack"></img>
-                <h1>Sign In</h1>
-                <p> My slack</p>
-                <Button
-                onClick ={signIn}>
-                    Sign In With Google
-                </Button>
-            </LoginInnerContainer>
-        </LoginContainer>
-)};
+      <LoginContainer>
+        <LoginInnerContainer>
+          {/* Your other components */}
+          <Button onClick={signIn}>Sign In With Google</Button>
+        </LoginInnerContainer>
+      </LoginContainer>
+    );
+  };
 
 export default Login;
 

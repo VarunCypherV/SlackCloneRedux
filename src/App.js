@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
 import AppBody from "./Components/AppBody"
-import Chat from "./Components/Chat";
 import {useAuthState} from "react-firebase-hooks/auth"
 import { auth } from "./firebase";
 import Login from "./Components/Login";
@@ -12,7 +11,21 @@ import Spinner from "react-spinkit";
 
 function App() {
   const {user , loading} = useAuthState(auth);
-  
+  const [userz , setUser] = useState(user);
+
+  useEffect(() => {
+   const unsubscribe = auth.onAuthStateChanged((authUser=>{
+    if(authUser){
+      setUser(authUser);
+    } else {
+      setUser(null);
+    }
+   }))
+   return () => {
+    unsubscribe();
+   };
+  }, []);
+
   if(loading){
     return <AppLoading>
         <AppLoadingContents>
@@ -27,30 +40,25 @@ function App() {
     
     
   }
-  
-  // if(!user){
-  //   return <Login/>
-  // }
-
   return (
     <div>
-      <Router>
-      {!user ? ( <Login/> ) : ( 
-        <>
-        <Header/>
-        <AppBody/>
-        <Routes>  
-        {/* //old ver : switch mew is routes */}
-          <Route path="/" exact />
-        </Routes>
-      </>
-      )}
-
-      </Router>
-      
-    </div>
-  );
+    <Router>
+      <Routes>
+        {/* Move the Route component here */}
+        <Route path="/" element={!userz ? <Login /> : <AppContent />} />
+      </Routes>
+    </Router>
+  </div>
+);
 }
+
+const AppContent = () => (
+<>
+  <Header />
+  <AppBody />
+</>
+  );
+
 
 export default App;
 
