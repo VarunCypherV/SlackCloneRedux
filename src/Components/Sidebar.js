@@ -15,11 +15,14 @@ import {
   InsertComment,
   PeopleAlt,
 } from "@mui/icons-material";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { getFirestore, collection } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 const Sidebar = () => {
   // const { channels , loading , error} = useCollection(db.collection("rooms"));
+  
+  const [user]=useAuthState(auth);
   const collectionRef = db.collection("rooms");
   const [channels, loading, error] = useCollection(collectionRef);
   return (
@@ -30,7 +33,7 @@ const Sidebar = () => {
           <h3>
             {" "}
             <FiberManualRecordIcon />
-            Varun
+            {user.displayName}
           </h3>
         </SidebarInfo>
         <CreateIcon />
@@ -48,11 +51,11 @@ const Sidebar = () => {
       <SidebarOption Icon={Add} title="Add Channel" addChannelOption />
       <hr />
       {/* creating side of channels in rooms collection in the side bar but they wont have addChannelOption since we need to select them */}
-      {channels         
+      {channels
         ? channels.docs.map((doc) => (
             <SidebarOption key={doc.id} title={doc.data().name} id={doc.id} />
           ))
-        :null}
+        : null}
     </SideBarContainer>
   );
 };

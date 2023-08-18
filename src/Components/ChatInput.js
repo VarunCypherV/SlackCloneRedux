@@ -1,15 +1,16 @@
 import { Avatar, Button } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 import firebase from "firebase/compat/app";
 import { Timestamp } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const ChatInput = (props) => {
-    const {channelName , channelId} = props;
+    const {channelName , channelId , chatRef} = props;
     // const InputRef = useRef(null);
     const [input,setInput]=useState('');
-
+    const [user]=useAuthState(auth);
     const sendMessage = (e) => {
         e.preventDefault(); // Prevent form submission
         
@@ -20,9 +21,13 @@ const ChatInput = (props) => {
         db.collection("rooms").doc(channelId).collection("messages").add({
             message: input,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            user: "me",
+            user: user.displayName,
+            userImage: user.photoURL
         });
         
+        chatRef.current.scrollIntoView({
+            behavior: "smooth",
+        })
         setInput("");
     };
     

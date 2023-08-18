@@ -25,13 +25,10 @@ const Chat = () => {
         return null; // or some loading indicator
     }
 
-   
-   
-
-
     return (
         <ChatContainer>
-        <> 
+        {roomDetails && roomMessages && (
+            <> 
         
             <Header>
                 <Headerleft>
@@ -63,11 +60,14 @@ const Chat = () => {
             {/* points to bottom after rendering */}
             <ChatInput channelId={roomId}
                 channelName={roomDetails?.data().name}
+                chatRef={chatRef}
            
             />
             
 
             </>
+        )} 
+        
         </ChatContainer>
     );
 };

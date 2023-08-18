@@ -5,7 +5,7 @@ import "firebase/firestore";
 import { GoogleAuthProvider } from "firebase/auth";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-
+import { getAuth } from "firebase/auth";
 const firebaseConfig = {
     apiKey: "AIzaSyCoVlj25eK4SXrWc0aB4hnzrSMqRGrrfeY",
     authDomain: "slackclone-ed42d.firebaseapp.com",
@@ -18,7 +18,8 @@ const firebaseConfig = {
 
   const firebaseApp= firebase.initializeApp(firebaseConfig);
   const db = firebaseApp.firestore();
-  const auth = firebase.auth();
+  const auth = getAuth();
   const provider = new GoogleAuthProvider();
-  // console.log(db.collection("rooms"));
+
+
   export {auth , provider , db};
