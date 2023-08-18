@@ -7,30 +7,29 @@ import { Timestamp } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 const ChatInput = (props) => {
-    const {channelName , channelId , chatRef} = props;
-    // const InputRef = useRef(null);
-    const [input,setInput]=useState('');
-    const [user]=useAuthState(auth);
+    const { channelName, channelId, chatRef } = props;
+    const [input, setInput] = useState('');
+    const [user] = useAuthState(auth);
     const sendMessage = (e) => {
         e.preventDefault(); // Prevent form submission
-        
+
         if (!channelId || !input.trim()) {
             return;
         }
-        
+
         db.collection("rooms").doc(channelId).collection("messages").add({
             message: input,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             user: user.displayName,
             userImage: user.photoURL
         });
-        
+
         chatRef.current.scrollIntoView({
             behavior: "smooth",
-        })
+        });
         setInput("");
     };
-    
+
     return (
         <ChatInputContainer>
             <form onSubmit={sendMessage}>
@@ -44,56 +43,37 @@ const ChatInput = (props) => {
         </ChatInputContainer>
     );
 };
-    
-    // const sendMessage = e =>{
-    //     e.preventDefault(); //prevents refresh
-
-    //     if(!channelId || !input.trim()){
-    //         return false;
-    //     }
-    //     db.collection("rooms").doc(channelId).collection("messages").add({
-    //         // message : InputRef.current.value, // get value of input field
-    //         message: input,
-    //         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //         user:"me",
-    //         // userImage: Avatar,
-    //     });
-    //     setInput("");
-    // };
-    //use ref used instead of useState
-//     return (
-//         <ChatInputContainer>
-//             <form>
-//                 {/* <input ref={InputRef} placeholder={`Message #Room`}/> */}
-//                 <input value={input} placeholder={`Message #Room`}
-//                     onChange={(e)=>{setInput(e.target.value)}}
-//                 />
-//                 <Button hidden types='submit' onClick={sendMessage}>SEND</Button>
-//             </form>
-//         </ChatInputContainer>
-//     );
-// };
 
 export default ChatInput;
 
 const ChatInputContainer = styled.div`
+    position: fixed;
+    bottom: 20px;
+    width: 60%;
     border-radius: 20px;
-
-    >form {
-        position : relative;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 15vw;
+    
+    > form {
+        flex-grow: 1;
         display: flex;
-        justify-content: center;
+        align-items: center;
+        margin:auto;
     }
-    >form > input{
-        position:fixed;
-        bottom : 30px;
-        width : 60%;
-        border : 1px solid gray;
-        border-radius : 3px;
-        padding : 20px;
-        outline : none;
+    
+    > form > input {
+        flex-grow: 1;
+        border: 1px solid gray;
+        border-radius: 3px;
+        padding: 20px;
+        outline: none;
+
     }
-    >form > button {
-        display : none !important //when i hit enter msg goes , it doesnt go
+    
+    > form > button {
+        display: none;
     }
 `;

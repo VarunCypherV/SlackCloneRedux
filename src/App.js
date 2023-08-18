@@ -14,19 +14,22 @@ function App() {
   const [userz , setUser] = useState(user);
 
   useEffect(() => {
-   const unsubscribe = auth.onAuthStateChanged((authUser=>{
+   const detectChange = auth.onAuthStateChanged((authUser=>{
     if(authUser){
       setUser(authUser);
     } else {
       setUser(null);
     }
+
    }))
+   
    return () => {
-    unsubscribe();
+    detectChange();
    };
+   
   }, []);
 
-  if(loading){
+  if(loading ){
     return <AppLoading>
         <AppLoadingContents>
           <img src="load" alt="slack"/>
@@ -37,9 +40,8 @@ function App() {
           />
         </AppLoadingContents>
     </AppLoading>
-    
-    
   }
+  
   return (
     <div>
     <Router>

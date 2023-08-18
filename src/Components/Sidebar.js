@@ -29,7 +29,7 @@ const Sidebar = () => {
     <SideBarContainer>
       <SidebarHeader>
         <SidebarInfo>
-          <h2> PAPA FAM HQ</h2>
+          <h2>Private Slack</h2>
           <h3>
             {" "}
             <FiberManualRecordIcon />
@@ -62,15 +62,27 @@ const Sidebar = () => {
 
 export default Sidebar;
 
+// const SideBarContainer = styled.div`
+//   margin-top: 60px;
+//   color: white;
+//   background-color: var(--slack-color);
+//   border-top: 1px solid #49274b;
+//   grid-column-start: 1;
+//   grid-column-end: 2;
+//   height: 100%; /* Make the sidebar take the full height */
+//   position: fixed; /* Fix the sidebar position */
+// `;
+
 const SideBarContainer = styled.div`
+  margin-top: 60px;
+  grid-column-start:1;
+  grid-column-end:2;
   color: white;
   background-color: var(--slack-color);
-  flex: 0.3;
-  margin-top: 60px;
   border-top: 1px solid #49274b;
-  max-width: 260px;
-  min-height: 100%;
-  margin-top: 60px;
+  width: 15vw;
+  height: 100vh; /* Use 100vh to cover the full viewport height */
+  position: fixed;
 `;
 
 const SidebarHeader = styled.div`
@@ -93,6 +105,7 @@ const SidebarHeader = styled.div`
 
 const SidebarInfo = styled.div`
   flex: 1;
+  
   > h2 {
     font-size: 15px;
     font-weight: 900;
